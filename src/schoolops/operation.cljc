@@ -1,8 +1,8 @@
 (ns schoolops.operation
   "OperationActor -- one coordination request = one supervised actor
   run, expressed as a langgraph-clj StateGraph. The advisor
-  (ElderCareAdvisor) is sealed into a single node (:advise); its
-  proposal is ALWAYS routed through the ElderCareGovernor (:govern)
+  (SchoolOpsAdvisor) is sealed into a single node (:advise); its
+  proposal is ALWAYS routed through the SchoolOpsGovernor (:govern)
   and the rollout phase gate (:decide) before anything commits to the
   SSoT.
 
@@ -18,7 +18,7 @@
 
   Human-in-the-loop = real approval workflow: `interrupt-before
   #{:request-approval}` pauses the actor and hands the decision to a
-  human operator/care coordinator. The approver resumes with
+  human operator/school-office coordinator. The approver resumes with
   `{:approval {:status :approved}}` (or :rejected)."
   (:require [langgraph.graph :as g]
             [langgraph.checkpoint :as cp]
@@ -64,13 +64,13 @@
 
       (g/add-node :intake (fn [s] s))
 
-      ;; ElderCareAdvisor inference (the contained intelligence node) -- proposal only.
+      ;; SchoolOpsAdvisor inference (the contained intelligence node) -- proposal only.
       (g/add-node :advise
         (fn [{:keys [request]}]
           (let [p (advisor/-advise advisor store request)]
             {:proposal p :audit [(advisor/trace request p)]})))
 
-      ;; ElderCareGovernor -- independent censor (separate system than the advisor).
+      ;; SchoolOpsGovernor -- independent censor (separate system than the advisor).
       (g/add-node :govern
         (fn [{:keys [request context proposal]}]
           {:verdict (governor/check request context proposal store)}))

@@ -1,20 +1,20 @@
-# cloud-itonami-isic-873
+# cloud-itonami-isic-851
 
-**Residential Care Activities for the Elderly and Disabled** — ISIC Rev.4 class 873.
+**Pre-primary and Primary Education** — ISIC Rev.4 class 851.
 
-A coordination-only actor for elderly/disabled residential care facilities, behind an independent Governor that earns advisor trust through structured oversight: proposal → advise → govern → decide → commit|hold|escalate.
+A coordination-only actor for primary/pre-primary school back-office administration, behind an independent Governor that earns advisor trust through structured oversight: proposal → advise → govern → decide → commit|hold|escalate.
 
 ## Features
 
-- **Closed proposal-op allowlist**: log-care-note, schedule-family-visit, coordinate-supply-request, schedule-staff-shift-proposal, flag-safety-concern (all `:effect :propose`).
+- **Closed proposal-op allowlist**: `log-attendance-note`, `schedule-parent-guardian-meeting`, `coordinate-supply-request`, `schedule-staff-shift-proposal`, `flag-safety-concern` (all `:effect :propose`).
 - **Three HARD governor checks** (permanent, un-overridable):
-  1. **Resident verified** — target must exist AND be registered/verified in the store.
+  1. **Student verified** — target must exist AND be registered/verified in the store.
   2. **Effect is :propose** — any other `:effect` value is rejected.
-  3. **Scope exclusion** — medication, clinical diagnosis, care-plan changes, physical restraint, end-of-life decisions, and safety-authority overrides are permanently blocked.
+  3. **Scope exclusion** — grading/academic assessment, curriculum/pedagogical decisions, disciplinary action (suspension/expulsion), special-education (IEP) determinations, custody/guardianship decisions, and safety-authority overrides are permanently blocked.
 - **Staged rollout** (Phase 0→3):
   - Phase 0: read-only
-  - Phase 1: care-note logging only (approval-gated)
-  - Phase 2: + family visit, supply, shift proposals (approval-gated)
+  - Phase 1: attendance-note logging only (approval-gated)
+  - Phase 2: + parent/guardian meeting, supply, staff-shift proposals (approval-gated)
   - Phase 3: auto-commits clean, high-confidence proposals (safety concerns always escalate)
 - **Append-only audit ledger** — every decision is an immutable log entry.
 - **langgraph-clj StateGraph** — one request = one supervised run; human-in-the-loop via `interrupt-before`.
@@ -32,25 +32,26 @@ clojure -M:dev:test
 clojure -M:lint
 
 # Run demo
-clojure -M:run
+clojure -M:dev:run
 ```
 
 ## Test suite
 
-- `test/eldercareops/governor_test.clj` — unit tests of governor hard checks and scope exclusion
-- `test/eldercareops/advisor_test.clj` — advisor proposal shape and consistency
-- `test/eldercareops/phase_test.clj` — rollout phase logic
-- `test/eldercareops/governor_contract_test.clj` — full graph integration, audit trail
-- `test/eldercareops/store_contract_test.clj` — Store protocol and MemStore implementation
+- `test/schoolops/governor_test.clj` — unit tests of governor hard checks and scope exclusion
+- `test/schoolops/advisor_test.clj` — advisor proposal shape and consistency
+- `test/schoolops/phase_test.clj` — rollout phase logic
+- `test/schoolops/governor_contract_test.clj` — full graph integration, audit trail
+- `test/schoolops/store_contract_test.clj` — Store protocol and MemStore implementation
 
 ## Modules
 
-- `eldercareops.store` — SSoT (MemStore, String-keyed resident directory, append-only ledger)
-- `eldercareops.advisor` — contained intelligence node (mock + real-LLM seam)
-- `eldercareops.governor` — independent compliance layer
-- `eldercareops.phase` — staged rollout (0→3)
-- `eldercareops.operation` — langgraph-clj StateGraph
-- `eldercareops.sim` — demo driver
+- `schoolops.store` — SSoT (MemStore, String-keyed student directory, append-only ledger)
+- `schoolops.advisor` — contained intelligence node (mock + real-LLM seam)
+- `schoolops.governor` — independent compliance layer
+- `schoolops.phase` — staged rollout (0→3)
+- `schoolops.operation` — langgraph-clj StateGraph
+- `schoolops.sim` — demo driver
+- `schoolops.render-html` — build-time generator for `docs/samples/operator-console.html` (`clojure -M:dev:render-html`)
 
 ## License
 
@@ -58,4 +59,8 @@ AGPL-3.0-or-later. See LICENSE file.
 
 ## Governance
 
-This actor is part of the cloud-itonami Wave 4 (human-services) fleet. See ADR-2607121000, ADR-2607152500, and ADR-2607152300 for design decisions.
+This actor is part of the cloud-itonami Wave 4 (human-services) fleet, and is the
+first actor in the ISIC-85 education cluster. See ADR-2607152900 (this repo's own
+decision record), ADR-2607121000 (Wave definition), and ADR-2607152700 (ISIC-873
+elderly residential care — module-shape precedent this repo mirrors) for design
+decisions.
