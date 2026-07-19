@@ -3,7 +3,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [schoolops.store :as store]))
 
-(deftest mem-store-resident-lookup
+(deftest mem-store-student-lookup
   (testing "MemStore can store and retrieve students by ID (string keys)"
     (let [students {"r1" {:student-id "r1" :name "Alice" :registered? true :verified? true}}
           s (store/mem-store students)]
@@ -42,7 +42,7 @@
       (is (= record (first (store/coordination-log s)))))))
 
 (deftest mem-store-with-students
-  (testing "MemStore with-students replaces the resident directory"
+  (testing "MemStore with-students replaces the student directory"
     (let [s (store/mem-store {})
           new-students {"r1" {:student-id "r1" :name "Alice"}}]
       (is (= 0 (count (store/all-students s))))

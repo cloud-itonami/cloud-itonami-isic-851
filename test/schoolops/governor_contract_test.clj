@@ -45,30 +45,30 @@
       (is (> (count (store/coordination-log db)) 0)
           "after approval, record must be committed"))))
 
-(deftest unregistered-resident-hard-hold
-  (testing "unregistered resident -> permanent HARD hold, never escalates"
+(deftest unregistered-student-hard-hold
+  (testing "unregistered student -> permanent HARD hold, never escalates"
     (let [db (store/seed-db)
           actor (op/build db)
           ctx {:actor-id "test-3" :phase 3}]
       (exec-request actor "t3"
-                     {:op :log-attendance-note :student-id "unknown-resident"
-                      :patch {:meal "breakfast"}}
+                     {:op :log-attendance-note :student-id "unknown-student"
+                      :patch {:status "present"}}
                      ctx)
       (is (= 0 (count (store/coordination-log db)))
           "HARD hold must never commit"))))
 
-(deftest unverified-resident-hard-hold
-  (testing "registered but unverified resident -> permanent HARD hold"
+(deftest unverified-student-hard-hold
+  (testing "registered but unverified student -> permanent HARD hold"
     (let [db (store/seed-db)
           actor (op/build db)
           ctx {:actor-id "test-4" :phase 3}
           result (exec-request actor "t4"
                                {:op :log-attendance-note :student-id "student-3"
-                                :patch {:meal "breakfast"}}
+                                :patch {:status "present"}}
                                ctx)]
       (is (some? result))
       (is (= 0 (count (store/coordination-log db)))
-          "unverified resident must HARD hold"))))
+          "unverified student must HARD hold"))))
 
 (deftest effect-not-propose-hard-hold
   (testing "proposal with :effect :commit (not :propose) -> hard hold"

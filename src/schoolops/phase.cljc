@@ -1,5 +1,5 @@
 (ns schoolops.phase
-  "Phase 0->3 staged rollout for the ISIC-873 residential-care
+  "Phase 0->3 staged rollout for the ISIC-851 primary-education
   operations-coordination actor.
 
     Phase 0  read-only            -- no writes, still governor-gated.
@@ -62,7 +62,7 @@
       :else                                {:disposition governor-disposition :reason nil})))
 
 (defn verdict->disposition
-  "Map an ElderCareGovernor verdict to a base disposition before
+  "Map a SchoolOpsGovernor verdict to a base disposition before
   the phase gate."
   [verdict]
   (cond (:hard? verdict) :hold

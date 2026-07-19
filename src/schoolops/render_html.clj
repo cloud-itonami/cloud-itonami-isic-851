@@ -12,19 +12,19 @@
   the same seed (verified by diffing two consecutive runs).
 
   NOTE for future porters of this template: this repo's OWN
-  `schoolops.sim` demo driver (`clojure -M:dev:run`) is NOT reused here
-  because it is a pre-existing, latent bug in this repo -- it drives
+  `schoolops.sim` demo driver (`clojure -M:dev:run`) previously drove
   requests against ids `resident-1`/`resident-3`/`resident-99`
   (leftover from copy-pasting an eldercare/ISIC-873 actor's sim.cljc)
-  that do not exist in `schoolops.store/demo-data` (which only has
+  that did not exist in `schoolops.store/demo-data` (which only has
   `student-1`/`student-2`/`student-3`), so EVERY one of its calls
-  actually HARD-holds on `:student-unverified` regardless of which
-  'happy path' it claims to demonstrate. Confirmed by running
-  `clojure -M:dev:run` directly before writing this file. This renderer
-  instead drives fresh, correct requests against the real seeded
-  student ids so the rendered page's happy-path / escalate / hard-hold
-  rows are genuinely representative of the actor's designed behavior,
-  not an artifact of a ns mismatch.
+  actually HARD-held on `:student-unverified` regardless of which
+  'happy path' it claimed to demonstrate. That has since been fixed
+  (`schoolops.sim` now drives the real seeded student ids). This
+  renderer was written independently of `schoolops.sim` and keeps its
+  own `run-demo!` scenario below so this build-time generator has no
+  runtime dependency on the demo driver either way -- every field read
+  by `render` below is real governor/store output, not a hand-typed
+  copy.
 
   Usage: `clojure -M:dev:render-html [out-file]`
   (default `docs/samples/operator-console.html`)."
