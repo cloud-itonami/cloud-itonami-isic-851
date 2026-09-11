@@ -23,16 +23,16 @@ A coordination-only actor for primary/pre-primary school back-office administrat
 
 ```bash
 # Install dependencies (if inside the superproject, use :dev alias for local overrides)
-clojure -M:dev -P
+kbb -M:dev -P
 
 # Run tests
-clojure -M:dev:test
+kbb -M:dev:test
 
 # Run linter
-clojure -M:lint
+kbb -M:lint
 
 # Run demo
-clojure -M:dev:run
+kbb -M:dev:run
 ```
 
 ## Test suite
@@ -51,7 +51,7 @@ clojure -M:dev:run
 - `schoolops.phase` — staged rollout (0→3)
 - `schoolops.operation` — langgraph-clj StateGraph
 - `schoolops.sim` — demo driver
-- `schoolops.render-html` — build-time generator for `docs/samples/operator-console.html` (`clojure -M:dev:render-html`)
+- `schoolops.render-html` — build-time generator for `docs/samples/operator-console.html` (`kbb -M:dev:render-html`)
 
 ## License
 
